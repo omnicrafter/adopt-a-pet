@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adopt a Pet</title>
+  </head>
+  <body>
+    <h1>Adopt a Pet!</h1>
+    {% for msg in get_flashed_messages() %}
+    <p>{{msg}}</p>
+    {% endfor %}
+    <ul>
+      {%for pet in pets %}
+      <li>
+        <img
+          src="{{pet.photo_url}}"
+          alt="Image of {{pet.name}}"
+          style="max-height: 50px"
+        />
+
+        <a href="/pets/{{pet.id}}">{{pet.name}}</a>
+        {%if pet.available %}
+        <strong>Available</strong>
+        {%endif%}
+      </li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
