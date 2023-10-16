@@ -7,6 +7,9 @@
   </head>
   <body>
     <h1>Adopt a Pet!</h1>
+    <form action="/add">
+      <button>Add a Pet</button>
+    </form>
     {% for msg in get_flashed_messages() %}
     <p>{{msg}}</p>
     {% endfor %}
