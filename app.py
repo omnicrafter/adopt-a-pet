@@ -3,7 +3,7 @@ from models import db, connect_db, Pet
 from flask_sqlalchemy import SQLAlchemy
 # from flask_debugtoolbar import DebugToolbarExtension <-- causes Import error '_request_ctx_stack'
 from flask_wtf import FlaskForm
-from forms import AddPetForm
+from forms import AddPetForm, PetForm
 from functions import emptystr_to_none
 
 app = Flask(__name__)
@@ -40,6 +40,7 @@ def list_pets():
 
 @app.route('/add', methods=['GET', 'POST'])
 def add_pet():
+    """Show add pet form and handle form submission"""
     form = AddPetForm()
 
     if form.validate_on_submit():
@@ -61,3 +62,24 @@ def add_pet():
 
     else:
         return render_template('add-pet-form.html', form=form)
+
+
+@app.route('/<int:pet_id>', methods=['GET', 'POST'])
+def display_edit_pet(pet_id):
+    """Display pet details and edit form"""
+
+    pet = Pet.query.get_or_404(pet_id)
+    form = PetForm(obj=pet)
+
+    if form.validate_on_submit():
+        pet.name = form.name.data
+        pet.species = form.species.data
+        pet.photo_url = emptystr_to_none(form.photo_url.data)
+        pet.age = form.age.data
+        pet.notes = form.notes.data
+
+        db.session.commit()
+        flash(f"{pet.name} updated!")
+        return redirect('/pets')
+    else:
+        return render_template('pet-details.html', pet=pet, form=form)
